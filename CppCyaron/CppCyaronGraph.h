@@ -29,8 +29,9 @@
 #include"CppCyaronMath.h"
 #pragma GCC optimize("O2")
 using std::vector;
-namespace CppCyaronGraphFunctions
-{
+using std::pair;
+using std::cout;
+using std::endl;
     struct __Edge
     {
         int32_t __from,__to;
@@ -53,61 +54,70 @@ namespace CppCyaronGraphFunctions
         __Graph(){__vertex_amount=0;__edgelist.clear();}
         ~__Graph(){delete &__vertex_amount;__edgelist.clear();delete &__edgelist;}
         void add(__Edge __added_edge){__edgelist.push_back(__added_edge);}
-        void SpawnGraph(int32_t __vertex_count,int32_t __edge_count,bool __self_edges,bool __repeat_edges,bool __directed)
+        void __UnguardedSpawn(int32_t __v,int32_t __e,bool __se)
         {
-            using namespace CppCyaronMathFunctions;
-            __vertex_amount=__vertex_count;
-            vector<int>__vec[__vertex_count+1];
-            for(int i=1;i<=__vertex_count;++i)__vec[i].push_back(i);
-            for(int32_t i=1;i<=__edge_count;++i)
-            {
-                int32_t __from_vertex,__to_vertex;
-                while(1)
-                {
-                    __from_vertex=rand_int32(1,__vertex_count);
-                    __to_vertex=rand_int32(1,__vertex_count);
-                    if(!__self_edges&&__from_vertex==__to_vertex)continue;
-                    if(__self_edges&&__from_vertex==__to_vertex)
-                    {
-                        __edgelist.push_back(__Edge(__from_vertex,__to_vertex));
-                        std::sort(__vec[__from_vertex].begin(),__vec[__from_vertex].end());
-                        if(!__directed)
-                        {
-                            __edgelist.push_back(__Edge(__to_vertex,__from_vertex));
-                            std::sort(__vec[__to_vertex].begin(),__vec[__to_vertex].end());
-                        }
-                        continue;
-                    }
-                    if(!__repeat_edges&&binary_search(__vec[__from_vertex].begin(),__vec[__from_vertex].end(),__to_vertex))
-                    {
-                        /*need to fix the problem of self edges*/
-                        bool __added=0;
-                        for(int j=0;j<__vec[__from_vertex].size();++j)
-                        {
-                            if(__vec[__from_vertex][j]!=j+1)
-                            {
-                                __added=1;
-                                __to_vertex=j+1;
-                                break;
-                            }
-                        }
-                        if(!__added)continue;
-                    }
 
-                    __edgelist.push_back(__Edge(__from_vertex,__to_vertex));
-                    __vec[__from_vertex].push_back(__to_vertex);
-                    std::sort(__vec[__from_vertex].begin(),__vec[__from_vertex].end());
-                    if(!__directed)
+        }
+        void SpawnGraph(int32_t __vertex_count,int32_t __edge_count,bool __self_edges,bool __repeat_edges,bool __directed)//Directed
+        {
+            __edgelist.clear();
+            if(__repeat_edges){__UnguardedSpawn(__vertex_count,__edge_count,__self_edges);return;}
+            if(pow(__vertex_count,1.5)<=__edge_count)
+            {
+                if(__directed)
+                {
+                    pair<int32_t,int32_t>__lis[__vertex_count*__vertex_count+10];
+                    int __offset=0;
+                    for(int i=1;i<=__vertex_count;++i)
+                        for(int j=1;j<=__vertex_count;++j)
+                            if(__self_edges)__lis[(i-1)*__vertex_count+j]=std::make_pair(i,j);
+                            else if(i^j)__lis[(i-1)*__vertex_count+j-__offset]=std::make_pair(i,j);
+                            else ++__offset;
+                    random_shuffle(__lis+1,__lis+__vertex_count*__vertex_count-__offset+1);
+                    for(int i=1;i<=__edge_count;++i)
                     {
-                        __edgelist.push_back(__Edge(__to_vertex,__from_vertex));
-                        __vec[__to_vertex].push_back(__from_vertex);
-                        std::sort(__vec[__to_vertex].begin(),__vec[__to_vertex].end());
+                        __Edge __ed;
+                        __ed.__from=__lis[i].first;
+                        __ed.__to=__lis[i].second;
+                        add(__ed);
                     }
-                    break;
+                    __vertex_amount=__vertex_count;
+                    return;
+                }
+                else
+                {
+
                 }
             }
+            int __rem=__edge_count;
+            int32_t __a=rand_int32(1,__vertex_count),__b=rand_int32(1,__vertex_count);
+            vector<int32_t>lis[__vertex_count+3];
+            while(__rem>0)
+            {
+                __a=rand_int32(1,__vertex_count),__b=rand_int32(1,__vertex_count);
+                while(find(lis[__a].begin(),lis[__a].end(),__b)!=lis[__a].end()||((__self_edges)?0:__a==__b)||((__directed)?0:(find(lis[__b].begin(),lis[__b].end(),__a)!=lis[__b].end())))
+                    __a=rand_int32(1,__vertex_count),__b=rand_int32(1,__vertex_count);
+                lis[__a].push_back(__b);
+                if(!__directed)lis[__b].push_back(__a);
+                --__rem;
+            }
+            __vertex_amount=__vertex_count;
+            if(!__directed)
+                for(int32_t i=1;i<=__vertex_count;++i)
+                    for(int32_t j=0;j<lis[i].size();++j)
+                        add((__Edge){i,lis[i][j]});
+            else
+            {
+                //needed to be edited later
+            }
+        }
+        void print()
+        {
+            cout<<__vertex_amount<<" "<<__edgelist.size()<<endl;
+            for(int i=0;i<__edgelist.size();++i)cout<<__edgelist[i].__from<<" "<<__edgelist[i].__to<<endl;
+            return;
         }
     };
-}
+
 
 #endif // CppCyaronGraph

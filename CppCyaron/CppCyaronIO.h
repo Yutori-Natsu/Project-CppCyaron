@@ -26,8 +26,7 @@
 #include<random>
 #include"CppCyaronGraph.h"
 #pragma GCC optimize("O2")
-namespace CppCyaronIOFunctions
-{
+
         //basic IO operations
     #define __NO_PARAMETER (int)-512
     FILE * __input_pointer, * __output_pointer, * __input_tempfile_pointer;
@@ -138,9 +137,8 @@ namespace CppCyaronIOFunctions
         vfprintf(__input_tempfile_pointer,__output_string,__vaPlist);
         __IO_close_cppcyaron();
     }
-    void InputWriteGraph(CppCyaronGraphFunctions::__Graph __G)
+    void InputWriteGraph(__Graph __G)
     {
-        using namespace CppCyaronGraphFunctions;
         __IO_init_cppcyaron();
         fprintf(__input_pointer,"%d\n",__G.__vertex_amount);
         for(int i=0;i<__G.__edgelist.size();++i)
@@ -169,5 +167,5 @@ namespace CppCyaronIOFunctions
         system("del input.tmp");
         system("del output.tmp");
     }
-}
+
 #endif // CppCyaronIO

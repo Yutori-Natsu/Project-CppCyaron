@@ -25,8 +25,8 @@
 #include<climits>
 #include<random>
 #pragma GCC optimize("O2")
-namespace CppCyaronMathFunctions
-{
+
+
         //some math functions
     template<typename T> T gcd(T __a__gcd_parameter,T __b__gcd_parameter)
     {
@@ -124,5 +124,5 @@ namespace CppCyaronMathFunctions
         __lastseed^=(int32_t)u(e);
         return u(e);
     }
-}
+
 #endif // CppCyaronMath

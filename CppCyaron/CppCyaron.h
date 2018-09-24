@@ -16,7 +16,14 @@
 #include"CppCyaronIO.h"
 #include"CppCyaronMath.h"
 #include"CppCyaronGraph.h"
-using namespace CppCyaronIOFunctions;
-using namespace CppCyaronMathFunctions;
-using namespace CppCyaronGraphFunctions;
+
+extern void IOinit(const char* __file_prefix_cppcyaron, const int data_id);
+extern void InputWrite(char* __output_string, ...);
+extern void InputWriteln(char* __format_string, ...);
+extern void OutputWrite(char* __output_string, ...);
+extern void OutputWriteln(char* __format_string, ...);
+extern void OutputGen(char* __dir);
+extern void InputWriteGraph(__Graph __G);
+template<typename T> extern T gcd(T __a__gcd_parameter, T __b__gcd_parameter);
+template<typename T> extern T abs(const T __parameter);
 #endif // CppCyaron

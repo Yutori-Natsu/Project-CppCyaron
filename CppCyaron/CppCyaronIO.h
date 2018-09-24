@@ -9,7 +9,7 @@
     Free Software Foundation; either version 3, or (at your option)
     any later version.
 
-    Copyright(C) 2018~2018, GD_ItzABC(Kirisame_Marisa_ sometimes)
+    Copyright(C) 2018~2018, CppCyaron Developers
 */
 #ifndef CppCyaronIO
 #define CppCyaronIO
